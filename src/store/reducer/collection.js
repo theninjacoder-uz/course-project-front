@@ -34,6 +34,7 @@ const slice = createSlice({
             state.item = data ? data : {}
         },
         onGetTopics: (state, {payload: {data}}) => {
+            console.log("topic", );
             state.topics = data ? data : []
         },
         onSuccess: (state, {payload: {message}}) => {
