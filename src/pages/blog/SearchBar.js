@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import {createTheme} from "@mui/material";
 import {connect} from "react-redux";
-import {getResultOfSearch, searchText} from "../../store/reducer/collection";
+import {getItemsByCollectionId, getResultOfSearch, searchText} from "../../store/reducer/collection";
 import DOMPurify from 'dompurify';
 import parse from "html-react-parser";
 import Box from "@mui/material/Box";
@@ -49,10 +49,10 @@ const SearchIconWrapper = styled('div')(({theme}) => ({
 const theme = createTheme()
 
 
-function SearchAppBar({searchResult, user, searchText,lan,mode, searchData, getResultOfSearch, getMe}) {
+function SearchAppBar({searchResult, user, searchText, lan, mode, getItemsByCollectionId, getMe}) {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState([]);
-    const [type, setType] = useState('');
+    // const [type, setType] = useState('');
     const loading = open && options.length === 0;
 
     const style = {
@@ -107,19 +107,19 @@ function SearchAppBar({searchResult, user, searchText,lan,mode, searchData, getR
         }
     }, [open]);
 
-    useEffect(() => {
-        if (searchData.id || searchData.types) {
-            if (type === COLLECTION) {
-                navigate('/itemsByCollection')
-            } else {
-                localStorage.setItem(ITEM_DATA, JSON.stringify({
-                    user: user.id,
-                    item: searchData.id
-                }))
-                navigate('/item')
-            }
-        }
-    }, [searchData]);
+    // useEffect(() => {
+    //     if (searchData.id || searchData.types) {
+    //         if (type === COLLECTION) {
+    //             navigate('/itemsByCollection')
+    //         } else {
+    //             localStorage.setItem(ITEM_DATA, JSON.stringify({
+    //                 user: user.id,
+    //                 item: searchData.id
+    //             }))
+    //             navigate('/item')
+    //         }
+    //     }
+    // }, [searchData]);
 
     useEffect(() => {
         setOptions(searchResult ? searchResult : [])
@@ -154,10 +154,22 @@ function SearchAppBar({searchResult, user, searchText,lan,mode, searchData, getR
 
     function selectItem(event, newValue) {
         if (event.type === 'click' || (event.type === 'keydown' && event.key === 'Enter')) {
-            setType(newValue.type)
-            console.log(newValue)
-            const param = 'type=' + newValue.type + '&id=' + (newValue.type === COMMENT ? newValue.item_id : newValue.id) + (user.id ? ('&user_id=' + user.id) : '')
-            getResultOfSearch(param)
+            if (newValue && newValue.length > 0) {
+                // setType(newValue[2])
+                console.log(newValue)
+                if (newValue[2] === COLLECTION) {
+                    getItemsByCollectionId(newValue[0])
+                    navigate('/itemsByCollection')
+                } else {
+                    localStorage.setItem(ITEM_DATA, JSON.stringify({
+                        user: user.id,
+                        item: newValue[0]
+                    }))
+                    navigate('/item')
+                }
+            }
+            // const param = 'type=' + newValue.type + '&id=' + (newValue.type === COMMENT ? newValue.item_id : newValue.id) + (user.id ? ('&user_id=' + user.id) : '')
+            // getResultOfSearch(param)
         }
     }
 
@@ -176,17 +188,17 @@ function SearchAppBar({searchResult, user, searchText,lan,mode, searchData, getR
                 onClose={() => {
                     setOpen(false);
                 }}
-                getOptionLabel={(option) => option.name + ': ' + htmlFrom(option.description).substring(0, 10) + '...'}
+                getOptionLabel={(option) => option[1]}
                 options={options}
                 loading={loading}
                 renderOption={(props, option) => (
                     <Box component="li" sx={{'& > img': {mr: 2, flexShrink: 0}}} {...props}>
                         {
-                            option.type === COLLECTION ? <CollectionsBookmarkIcon sx={{width: '20'}}/>
-                                : option.type === COMMENT ? <CommentIcon sx={{width: '20'}}/> :
+                            option[2] === COLLECTION ? <CollectionsBookmarkIcon sx={{width: '20'}}/>
+                                : option[2] === COMMENT ? <CommentIcon sx={{width: '20'}}/> :
                                     <TurnedInNotIcon sx={{width: '20'}}/>
                         }
-                        {option.name + ': ' + htmlFrom(option.description).substring(0, 10) + '...'}
+                        {option[1]}
                     </Box>
                 )}
                 renderInput={(params) => (
@@ -212,7 +224,7 @@ function SearchAppBar({searchResult, user, searchText,lan,mode, searchData, getR
 }
 
 export default connect(({collection: {searchResult, searchData}, user: {user}}) => ({searchResult, searchData, user}),
-    {searchText, getResultOfSearch, getMe}
+    {searchText, getResultOfSearch, getMe, getItemsByCollectionId}
 )(SearchAppBar)
 
 

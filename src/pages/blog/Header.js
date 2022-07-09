@@ -180,7 +180,7 @@ function Header({tags, title,mode, choose_tag, changeLan, user, lan,setMode}) {
                                 sx={{p: 1, flexShrink: 0}}
                                 onClick={() => choose_tag(tag.id)}
                             >
-                                {tag.name}
+                                {lan === ENG ? tag.name_eng : tag.name_rus}
                             </Link>
                         ))}
                 </Toolbar>

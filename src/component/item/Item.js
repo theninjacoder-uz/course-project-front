@@ -6,7 +6,7 @@ import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import {DARK, ORANGE} from "../../util/constants/color";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {getItem, putLike, saveComment} from "../../store/reducer/collection";
 import {FormControl, FormControlLabel, InputAdornment, InputLabel, OutlinedInput} from "@mui/material";
 import {useNavigate} from "react-router";
@@ -22,44 +22,55 @@ import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import {AccountCircle} from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
-import {Client} from "@stomp/stompjs";
 import {ACCESS_TOKEN, ITEM_DATA, LANGUAGE, SOCKET_URL} from "../../util/constants";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import {getMe} from "../../store/reducer/user";
 import {ENG} from "../../util/constants/language";
+import * as StompJs from "@stomp/stompjs";
 
-
-function ItemPage({item, user, putLike, saveComment, getItem, getMe}) {
+function ItemPage({item, user, putLike, getItem, getMe, authorization}) {
 
     const lan = localStorage.getItem(LANGUAGE)
+    const client = useRef({});
+    const navigate = useNavigate()
 
-    let onConnected = () => {
-        console.log("Connected!!")
-        client.subscribe('/topic/comments/' + item.id, function (msg) {
-            if (msg.body) {
-                let data = JSON.parse(msg.body)
-                data = data.data
-                if (!comments.filter(it => it.id === data.id)[0]) {
-                    comments.unshift(data)
-                    setComments([...comments])
-                }
+    const [color, setColor] = useState(item.is_liked ? ORANGE : DARK)
+    const [cnt, setCnt] = useState(0)
+    const [condition, setCondition] = useState([])
+    const [comment, setComment] = useState('')
+    const [comments, setComments] = useState([]);
+
+    useEffect(() => {
+        console.log("Before ws connection", comments);
+        connect();
+        return () => disconnect();
+    }, [item]);
+
+    const connect = () => {
+        client.current = new StompJs.Client({
+            brokerURL: SOCKET_URL,
+            onConnect: () => {
+                subscribe();
+            },
+            debug: function (str) {
+                console.log(str);
             }
         });
-    }
-    let onDisconnected = () => {
-        console.log("Disconnected!!")
-    }
+        client.current.activate();
+    };
 
-    const client = new Client({
-        brokerURL: SOCKET_URL,
-        reconnectDelay: 5000,
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
-        onConnect: onConnected,
-        onDisconnect: onDisconnected
-    });
-    if (!client.active)
-        client.activate();
+    const disconnect = () => {
+        if (client.current.connected)
+            client.current.deactivate();
+    };
+
+    const subscribe = () => {
+        item.id && client.current.subscribe(`/topic/comment/${item.id}`, ({body}) => {
+            if (body) {
+                addComment(JSON.parse(body));
+            }
+        })
+    };
 
     const option = {
         align: 'center',
@@ -67,26 +78,28 @@ function ItemPage({item, user, putLike, saveComment, getItem, getMe}) {
         height: '50px'
     }
 
-    const navigate = useNavigate()
-
-    const [color, setColor] = useState(item.liked ? ORANGE : DARK)
-    const [cnt, setCnt] = useState(0)
-    const [condition, setCondition] = useState([])
-    const [comment, setComment] = useState('')
-    const [comments, setComments] = useState([])
-
+    const addComment = (content) => {
+        comments.unshift(content)
+        setComments([...comments])
+    }
 
     function giveLike() {
-        let isLike = color === DARK
-        putLike(user.id, item.id, isLike)
-        setCnt(isLike ? condition[0] : condition[1])
-        setColor(p => p === DARK ? ORANGE : DARK)
+        console.log(item);
+        if (authorization) {
+            let isLike = color === DARK
+            putLike(user.id, item.id, isLike)
+            setCnt(isLike ? condition[0] : condition[1])
+            setColor(p => p === DARK ? ORANGE : DARK)
+        } else {
+            toast.error("You need to sign up to give like", {autoClose: 1500});
+        }
     }
 
     useEffect(() => {
+        console.log("item", item)
         if (item.id) {
-            setColor(item.liked ? ORANGE : DARK)
-            setCondition(item.liked ? [0, -1] : [1, 0])
+            setColor(item.is_liked ? ORANGE : DARK)
+            setCondition(item.is_liked ? [0, -1] : [1, 0])
             setComments([...item.comments])
         }
     }, [item])
@@ -94,26 +107,33 @@ function ItemPage({item, user, putLike, saveComment, getItem, getMe}) {
 
     useEffect(() => {
         const itemData = JSON.parse(localStorage.getItem(ITEM_DATA))
-        if (itemData.user) {
-            getMe()
+        getMe()
+        if (itemData && itemData.user)
             getItem(itemData.user, itemData.item)
-        } else {
+        else getItem(0, itemData.item)
+        if (!authorization) {
             localStorage.removeItem(ITEM_DATA)
             localStorage.removeItem(ACCESS_TOKEN)
-            navigate('/login')
-            toast.error('You need to sign in!', {autoClose: 1500})
         }
     }, [])
 
     function sendMessage() {
-        saveComment({
-            text: comment,
-            item_id: item.id,
-            user_id: user.id
-        })
+        if (!client.current.connected) {
+            return;
+        }
+        if (authorization && client.current.connected) {
+            client.current.publish({
+                destination: "/app/comment",
+                body: JSON.stringify({
+                    text: comment,
+                    item_id: item.id,
+                    user_id: user.id
+                }),
+            });
+        } else {
+            toast.error("You need to sign up to send comment", {autoClose: 1500});
+        }
         setComment('')
-
-
     }
 
     return (
@@ -200,7 +220,7 @@ function ItemPage({item, user, putLike, saveComment, getItem, getMe}) {
                                             <Grid item xs={12} sm={12}>
                                                 <FormControl fullWidth sx={{m: 1}}>
                                                     <InputLabel htmlFor="outlined-adornment-amount">
-                                                        {lan===ENG?'You may write your comments here':'Здесь вы можете написать свои комментарии'}
+                                                        {lan === ENG ? 'You may write your comments here' : 'Здесь вы можете написать свои комментарии'}
                                                     </InputLabel>
                                                     <OutlinedInput
                                                         id="outlined-adornment-amount"

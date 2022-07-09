@@ -54,8 +54,8 @@ function ItemByTag({user, items, getItem, getMe}) {
                                         <CardContent>
                                             {
                                                 items[key] && items[key].map(entity => (
-                                                    <Typography variant='h6' key={entity.fieldKey}>
-                                                        {entity.fieldKey && (entity.fieldKey.toUpperCase() + ':\t' + entity.fieldValue)}
+                                                    <Typography variant='h6' key={entity.field_key}>
+                                                        {entity.field_key && (entity.field_key.toUpperCase() + ':\t' + entity.field_value)}
                                                     </Typography>
                                                 ))
                                             }

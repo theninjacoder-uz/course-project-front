@@ -61,7 +61,7 @@ export const getMe = () => apiCall({
     url: '/user/me',
     method: 'GET',
     onSuccess: slice.actions.onGetMeSuccess.type,
-    onFail: slice.actions.onFail.type,
+    onFail: slice.actions.onGetMeSuccess.type,
     headers: {Authorization: localStorage.getItem(ACCESS_TOKEN)}
 });
 

@@ -13,7 +13,7 @@ const initialState = {
     image_url: '',
     fields: [],
     item: {},
-    searchResult: '',
+    searchResult: [],
     searchData: {}
 }
 
@@ -56,6 +56,7 @@ const slice = createSlice({
             fileDownload(payload, 'collection.csv')
         },
         onSearch: (state, {payload: {data}}) => {
+            console.log("search: ", data);
             state.searchResult = data ? data : ''
         },
         onGetSearchResult: (state, {payload: {data}}) => {

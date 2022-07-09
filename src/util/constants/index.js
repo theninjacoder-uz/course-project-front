@@ -8,7 +8,7 @@ export const BASE_URL = 'http://' + BACK_HOST;
 
 export const API_BASE_URL = BASE_URL + '/api/v1';
 
-export const SOCKET_URL = 'ws://' + BACK_HOST + '/ws';
+export const SOCKET_URL = 'ws://' + BACK_HOST + '/socket';
 
 
 export const OAUTH2_REDIRECT_URI = 'http://' + FRONT_HOST + '/oauth2/redirect'

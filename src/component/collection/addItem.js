@@ -156,7 +156,7 @@ function AddItem({user, collections, tags, fields, getAllCollectionsByUserId, ge
                                             tags.map(item => (
                                                 < Button size={'small'} about={btnType} key={item.id}
                                                          variant={tag_ids.includes(item.id) ? 'contained' : 'outlined'}
-                                                         onClick={() => handleChooseTag(item.id)}>{item.name}
+                                                         onClick={() => handleChooseTag(item.id)}>{lan===ENG ? item.name_eng : item.name_rus}
                                                 </Button>
                                             ))
                                         }
