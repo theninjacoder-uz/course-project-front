@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {Modal} from "@mui/material";
-import {BLOCK, GET_PERMISSION} from "../../util/constants";
 
 function DeleteModal({suffix, id, open, toggle, givenFunction}) {
 
@@ -15,6 +14,7 @@ function DeleteModal({suffix, id, open, toggle, givenFunction}) {
         p: 4,
         borderRadius: 2
     };
+
 
     function activate() {
         toggle()

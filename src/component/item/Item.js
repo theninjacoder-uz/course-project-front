@@ -33,7 +33,6 @@ function ItemPage({item, user, putLike, getItem, getMe, authorization}) {
     const lan = localStorage.getItem(LANGUAGE)
     const client = useRef({});
     const navigate = useNavigate()
-
     const [color, setColor] = useState(item.is_liked ? ORANGE : DARK)
     const [cnt, setCnt] = useState(0)
     const [condition, setCondition] = useState([])

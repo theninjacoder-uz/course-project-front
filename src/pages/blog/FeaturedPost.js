@@ -19,6 +19,7 @@ import {DARK} from "../../util/constants/color";
 import parse from "html-react-parser";
 import DeleteModal from "../../component/modal/DeleteModal";
 import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
+import DeleteIcon from '@mui/icons-material/Delete';
 import post from '../../util/img/post/post.png'
 import {LANGUAGE} from "../../util/constants";
 
@@ -29,7 +30,7 @@ function FeaturedPost({collection, getItemsByCollectionId, deleteCollection, dow
     const [open, setOpen] = useState(false)
 
     function toggle() {
-        setOpen(p => !p)
+        setOpen(!open)
     }
 
     function getCollection(id) {
@@ -93,11 +94,18 @@ function FeaturedPost({collection, getItemsByCollectionId, deleteCollection, dow
                                 <DownloadForOfflineIcon sx={{color: DARK}}/>
                             </IconButton>
                         </div>
+                        <div onClick={toggle}>
+                            <IconButton aria-label="share">
+                                <DeleteIcon/>
+                                <DeleteModal id={collection.id} open={open} toggle={toggle} givenFunction={delCollection}
+                                             suffix={'your collection'}/>
+                            </IconButton>
+                        </div>
                     </CardActions>
                 </CardActionArea>
             </Card>
-            <DeleteModal id={collection.id} open={open} toggle={toggle} givenFunction={delCollection}
-                         suffix={'your collection'}/>
+            {/*<DeleteModal id={collection.id} open={open} toggle={toggle} givenFunction={delCollection}*/}
+            {/*             suffix={'your collection'}/>*/}
         </Grid>
     );
 }

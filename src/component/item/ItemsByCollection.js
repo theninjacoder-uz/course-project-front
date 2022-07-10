@@ -16,12 +16,14 @@ import {ITEM_DATA} from "../../util/constants";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteModal from "../modal/DeleteModal";
 
 
 function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [itemList, setItemList] = React.useState();
+    const [open, setOpen] = React.useState(false);
 
     const navigate = useNavigate()
 
@@ -57,6 +59,10 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
                 if (key != itemId) obj[key] = itemList.values[key]
             })
         setItemList({types: [...itemList.types], values: {...obj}})
+    }
+
+    function toggle(){
+        setOpen(!open);
     }
 
     function handleEdit(itemId) {
@@ -130,9 +136,16 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
                                                         minWidth: option.minWidth,
                                                         height: option.height
                                                     }}>
-                                            <IconButton aria-label="delete" onClick={() => handleDelete(key)}>
-                                                <DeleteIcon/>
-                                            </IconButton>
+                                            {/*<IconButton aria-label="delete" onClick={() => handleDelete(key)}>*/}
+                                            {/*    <DeleteIcon/>*/}
+                                            {/*</IconButton>*/}
+                                            <div onClick={toggle}>
+                                                <IconButton aria-label="share">
+                                                    <DeleteIcon/>
+                                                    <DeleteModal id={key} open={open} toggle={toggle} givenFunction={handleDelete}
+                                                                 suffix={'your item'}/>
+                                                </IconButton>
+                                            </div>
                                             <IconButton aria-label="edit" onClick={() => handleEdit(key)}>
                                                 <EditIcon/>
                                             </IconButton>
