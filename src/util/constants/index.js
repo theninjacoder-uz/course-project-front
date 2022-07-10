@@ -25,7 +25,7 @@ export const MODE = 'collect-mode';
 export const MODE_LIGHT = 'collect-mode';
 export const MODE_DARK = 'collect-mode';
 const lan = localStorage.getItem(LANGUAGE)
-export const PAGE_AUTHENTICATION = lan === ENG ? 'Authentication' : 'Аутентификация'
+export const PAGE_AUTHENTICATION = lan === ENG ? 'User Management' : 'Управление пользователями'
 export const PAGE_COLLECTION = lan === ENG ? 'Collection' : 'Коллекция'
 
 

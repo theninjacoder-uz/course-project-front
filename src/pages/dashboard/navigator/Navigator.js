@@ -13,6 +13,7 @@ import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import {LANGUAGE, PAGE_AUTHENTICATION, PAGE_COLLECTION} from "../../../util/constants";
 import {useState} from "react";
 import {ENG} from "../../../util/constants/language";
+import {useNavigate} from "react-router";
 
 
 const item = {
@@ -33,6 +34,7 @@ const itemCategory = {
 export default function Navigator(props) {
     const {user, setCrtPage, ...other} = props;
     const lan=localStorage.getItem(LANGUAGE)
+    const navigate = useNavigate();
 
     const [categories, setCategories] = useState([
         {
@@ -46,7 +48,7 @@ export default function Navigator(props) {
             ]
         },
         {
-            id: 'Modification',
+            id: '',
             children: [
                 {
                     id: PAGE_COLLECTION,
@@ -69,6 +71,9 @@ export default function Navigator(props) {
         setCrtPage(id)
     }
 
+    function navigateHomePage(){
+        navigate("/", {state: {lan: localStorage.getItem(LANGUAGE)}});
+    }
 
 
 
@@ -79,11 +84,11 @@ export default function Navigator(props) {
                     {lan === ENG ? 'Dashboard' : 'Панель'}
                 </ListItem>
 
-                <ListItem sx={{...item, ...itemCategory}}>
+                <ListItem sx={{...item, ...itemCategory}} onClick={navigateHomePage}>
                     <ListItemIcon>
                         <HomeIcon/>
                     </ListItemIcon>
-                    <ListItemText>{lan===ENG?'Project Overview':'Обзор проекта'}</ListItemText>
+                    <ListItemText>{lan===ENG?'Home page':'Главный страница'}</ListItemText>
                 </ListItem>
 
                 {

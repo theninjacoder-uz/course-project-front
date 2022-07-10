@@ -95,6 +95,7 @@ export const getAllCollectionsByUserId = (userId) => apiCall({
     method: 'GET',
     onSuccess: slice.actions.onGetAllSuccess.type,
     onFail: slice.actions.onFail.type,
+    headers: {Authorization: localStorage.getItem(ACCESS_TOKEN)},
 });
 
 export const getTags = () => apiCall({
@@ -116,6 +117,15 @@ export const getItemsByTag = (tag_id) => apiCall({
     onSuccess: slice.actions.onGetItem.type,
     onFail: slice.actions.onFail.type,
 });
+
+export const deleteItem = (id) => apiCall({
+    url: '/item/' + id,
+    method: 'DELETE',
+    onSuccess: slice.actions.onSuccess.type,
+    onFail: slice.actions.onFail.type,
+    headers: {Authorization: localStorage.getItem(ACCESS_TOKEN)},
+});
+
 export const getTopics = () => apiCall({
     url: '/topic',
     method: 'GET',

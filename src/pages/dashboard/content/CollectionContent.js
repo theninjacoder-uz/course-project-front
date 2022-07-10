@@ -31,8 +31,9 @@ function CollectionContent({
 
     useEffect(() => {
         clearImg()
+        console.log("user", user)
         user.id && getAllCollectionsByUserId(user.id)
-    }, [])
+    }, [user])
 
     return (
         <ThemeProvider theme={theme}>
@@ -45,7 +46,7 @@ function CollectionContent({
                                               getItemsByCollectionId={getItemsByCollectionId}
                                               deleteCollection={deleteCollection}/>
                             ))}
-                    </Grid> : collectionPageVal === ADD_COLLECTION ? <AddCollection/> :<AddItem/>
+                    </Grid> : collectionPageVal === ADD_COLLECTION ? <AddCollection/> : <AddItem/>
                 }
             </main>
         </ThemeProvider>

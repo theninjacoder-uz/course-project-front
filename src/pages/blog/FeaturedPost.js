@@ -68,7 +68,7 @@ function FeaturedPost({collection, getItemsByCollectionId, deleteCollection, dow
                     />
                     <CardMedia
                         component="img"
-                        height="194"
+                        height="200"
                         image={collection.image_url ? collection.image_url : post}
                         alt="Paella dish"
                     />

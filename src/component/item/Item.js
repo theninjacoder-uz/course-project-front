@@ -195,7 +195,7 @@ function ItemPage({item, user, putLike, getItem, getMe, authorization}) {
                                                                           height: option.height
                                                                       }}>
                                                     {
-                                                        column.name === 'tag' ? item.tags.map(tag => parse(tag.name + '<br>')) :
+                                                        column.name === 'tag' ? item.tags.map(tag => parse(lan=== ENG ? tag.name_eng : tag.name_rus + '<br>')) :
                                                             item.fields.values[item.id]
                                                                 .map(cell =>
                                                                     column.id === cell.field_id ?

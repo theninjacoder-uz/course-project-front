@@ -39,10 +39,10 @@ function MainFeaturedPost({collection, getItemsByCollectionId, download}) {
                 backgroundColor: 'grey.800',
                 color: '#fff',
                 mb: 4,
+                backgroundImage: `url(${collection.image_url?collection.image_url:post})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundImage: `url(${collection.image_url?collection.image_url:post})`,
+                backgroundPosition: 'center center',
             }}
         >
             <Box
