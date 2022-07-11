@@ -24,7 +24,6 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [itemList, setItemList] = React.useState();
     const [open, setOpen] = React.useState(false);
-
     const navigate = useNavigate()
 
     const option = {
@@ -61,7 +60,7 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
         setItemList({types: [...itemList.types], values: {...obj}})
     }
 
-    function toggle(){
+    function toggle() {
         setOpen(!open);
     }
 
@@ -74,6 +73,8 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
     }, [])
 
     useEffect(() => {
+        console.log("user", user)
+        console.log("items", items)
         if (items) {
             setItemList(items);
         }
@@ -97,9 +98,11 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
                                     </TableCell>
                                 ))
                             }
-                            <TableCell>
-                                ACTION
-                            </TableCell>
+                            {items.owner_id === user.id || user.roles > 1 ?
+                                <TableCell>
+                                    ACTION
+                                </TableCell> : ''
+                            }
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -130,26 +133,25 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
                                                     </TableCell>
                                                 )
                                         }
-                                        < TableCell key={key.length + 1}
-                                                    align={option.align}
-                                                    style={{
-                                                        minWidth: option.minWidth,
-                                                        height: option.height
-                                                    }}>
-                                            {/*<IconButton aria-label="delete" onClick={() => handleDelete(key)}>*/}
-                                            {/*    <DeleteIcon/>*/}
-                                            {/*</IconButton>*/}
-                                            <div onClick={toggle}>
-                                                <IconButton aria-label="share">
-                                                    <DeleteIcon/>
-                                                    <DeleteModal id={key} open={open} toggle={toggle} givenFunction={handleDelete}
-                                                                 suffix={'your item'}/>
+                                        {items.owner_id === user.id || user.roles > 1 ?
+                                            < TableCell key={key.length + 1}
+                                                        align={option.align}
+                                                        style={{
+                                                            minWidth: option.minWidth,
+                                                            height: option.height
+                                                        }}>
+                                                <div onClick={toggle}>
+                                                    <IconButton aria-label="share">
+                                                        <DeleteIcon/>
+                                                        <DeleteModal id={key} open={open} toggle={toggle}
+                                                                     givenFunction={handleDelete}
+                                                                     suffix={'your item'}/>
+                                                    </IconButton>
+                                                </div>
+                                                <IconButton aria-label="edit" onClick={() => handleEdit(key)}>
+                                                    <EditIcon/>
                                                 </IconButton>
-                                            </div>
-                                            <IconButton aria-label="edit" onClick={() => handleEdit(key)}>
-                                                <EditIcon/>
-                                            </IconButton>
-                                        </TableCell>
+                                            </TableCell> : ''}
                                     </TableRow>
                                 ))
                         }
