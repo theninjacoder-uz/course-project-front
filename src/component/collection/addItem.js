@@ -98,7 +98,7 @@ function AddItem({user, collections, tags, fields, getAllCollectionsByUserId, ge
             field_values: [...field_values, {
                 field_id: fields.filter(item => item.name === 'name')[0].id,
                 value: item_name
-            }]
+            } ]
         })
     };
 

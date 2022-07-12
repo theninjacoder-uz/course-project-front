@@ -156,7 +156,7 @@ function SearchAppBar({searchResult, user, searchText, lan, mode, getItemsByColl
         if (event.type === 'click' || (event.type === 'keydown' && event.key === 'Enter')) {
             if (newValue && newValue.length > 0) {
                 // setType(newValue[2])
-                console.log(newValue)
+                // console.log(newValue)
                 if (newValue[2] === COLLECTION) {
                     getItemsByCollectionId(newValue[0])
                     navigate('/itemsByCollection')

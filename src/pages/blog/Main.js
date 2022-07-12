@@ -69,7 +69,10 @@ function Main({
                         collections.map((collection, index) => (
                             index > 0 && index < 5 ? <FeaturedPost key={collection.id} collection={collection}
                                                                    getItemsByCollectionId={getItemsByCollectionId}
-                                                                   download={download}/> : ''
+                                                                   download={download}
+                                                                   user_id={0}
+                                                                   roles={0}
+                            /> : ''
                         ))}
                 </Grid>
             </main> : ''}

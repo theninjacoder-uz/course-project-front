@@ -35,6 +35,12 @@ export const DATE = {
     type:'date'
 }
 
+export const DOUBLE = {
+    id: 7,
+    name: 'DOUBLE',
+    type:'double'
+}
+
 export const types = [
     INTEGER,
     STRING,
@@ -42,4 +48,5 @@ export const types = [
     CHAR,
     BOOLEAN,
     DATE,
+    DOUBLE
 ]

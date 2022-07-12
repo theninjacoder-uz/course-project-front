@@ -157,6 +157,16 @@ export const saveItem = (data) => apiCall({
     headers: {Authorization: localStorage.getItem(ACCESS_TOKEN)},
     data
 });
+
+export const updateItem = (id, data) => apiCall({
+    url: '/item/'+id,
+    method: 'PUT',
+    onSuccess: slice.actions.onSuccess.type,
+    onFail: slice.actions.onFail.type,
+    headers: {Authorization: localStorage.getItem(ACCESS_TOKEN)},
+    data
+});
+
 export const getCollectionFields = (collection_id) => apiCall({
     url: '/field/list?id=' + collection_id,
     method: 'GET',

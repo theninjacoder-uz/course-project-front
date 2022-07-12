@@ -23,7 +23,7 @@ function MainFeaturedPost({collection, getItemsByCollectionId, download}) {
 
     function getCollection(id) {
         getItemsByCollectionId(id)
-        navigate('/itemsByCollection')
+        navigate('/itemsByCollection', {state: {collection_id: collection.id}})
     }
 
     function downloadCSV(id) {

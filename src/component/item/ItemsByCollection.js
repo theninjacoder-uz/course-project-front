@@ -64,9 +64,7 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
         setOpen(!open);
     }
 
-    function handleEdit(itemId) {
-        console.log(itemId);
-    }
+
 
     useEffect(() => {
         getMe()
@@ -148,8 +146,8 @@ function ItemsByCollection({items, user, getItem, getMe, deleteItem}) {
                                                                      suffix={'your item'}/>
                                                     </IconButton>
                                                 </div>
-                                                <IconButton aria-label="edit" onClick={() => handleEdit(key)}>
-                                                    <EditIcon/>
+                                                <IconButton aria-label="edit">
+                                                    <EditIcon />
                                                 </IconButton>
                                             </TableCell> : ''}
                                     </TableRow>

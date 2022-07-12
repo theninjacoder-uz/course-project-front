@@ -44,7 +44,9 @@ function CollectionContent({
                             collections.map(collection => (
                                 <FeaturedPost download={download} key={collection.id} collection={collection} user_id={user.id}
                                               getItemsByCollectionId={getItemsByCollectionId}
-                                              deleteCollection={deleteCollection}/>
+                                              deleteCollection={deleteCollection}
+                                              roles={user.roles}
+                                />
                             ))}
                     </Grid> : collectionPageVal === ADD_COLLECTION ? <AddCollection/> : <AddItem/>
                 }

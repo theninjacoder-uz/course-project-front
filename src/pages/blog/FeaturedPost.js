@@ -23,7 +23,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import post from '../../util/img/post/post.png'
 import {LANGUAGE} from "../../util/constants";
 
-function FeaturedPost({collection, getItemsByCollectionId, deleteCollection, download}) {
+function FeaturedPost({collection, getItemsByCollectionId, deleteCollection, download, user_id, roles}) {
 
     const navigate = useNavigate()
 
@@ -35,7 +35,7 @@ function FeaturedPost({collection, getItemsByCollectionId, deleteCollection, dow
 
     function getCollection(id) {
         getItemsByCollectionId(id)
-        navigate('/itemsByCollection')
+        navigate('/itemsByCollection', {state: {collection_id: collection.id}})
     }
 
 
@@ -94,13 +94,17 @@ function FeaturedPost({collection, getItemsByCollectionId, deleteCollection, dow
                                 <DownloadForOfflineIcon sx={{color: DARK}}/>
                             </IconButton>
                         </div>
-                        <div onClick={toggle}>
-                            <IconButton aria-label="share">
-                                <DeleteIcon/>
-                                <DeleteModal id={collection.id} open={open} toggle={toggle} givenFunction={delCollection}
-                                             suffix={'your collection'}/>
-                            </IconButton>
-                        </div>
+                        {
+                            (collection.collection_author.id === user_id || roles > 1) ?
+                                < div onClick={toggle}>
+                                    <IconButton aria-label="share">
+                                        <DeleteIcon/>
+                                        <DeleteModal id={collection.id} open={open} toggle={toggle}
+                                                     givenFunction={delCollection}
+                                                     suffix={'your collection'}/>
+                                    </IconButton>
+                                </div> : ''
+                        }
                     </CardActions>
                 </CardActionArea>
             </Card>
